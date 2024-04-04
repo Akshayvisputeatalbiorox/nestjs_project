@@ -26,8 +26,8 @@ export class SongsController {
     @Get(':id')
     findOne(
         @Param('id',new ParseIntPipe({errorHttpStatusCode:HttpStatus.NOT_ACCEPTABLE}))
-    id: number )
-    {
+    id: number
+    ){
         return "fetch song based on id"
     }
 
