@@ -1,25 +1,21 @@
 import { Controller ,Get ,Put, Delete,Post, Param, ParseIntPipe, HttpStatus} from '@nestjs/common';
 import { SongsService } from './songs.service';
 import { Body } from '@nestjs/common';
-import { createSongDto } from './create-song-dto';
+import { createSongDTO } from './create-song-dto'
+import { Song } from './song-entity';
 
 @Controller('songs')
 export class SongsController {
-    constructor(private songService:SongsService) {}
-    //for body validation 
-    //  @Post()
-    //  create(@Body() createSongDto:createSongDto) {
-    //     return this.songService.create(createSongDto);
-    //  }
+    constructor(private songsService:SongsService) {}
 
     @Post()
-    create() {
-       return this.songService.create(createSongDto);
+    create(@Body() createSongDTO:createSongDTO){
+       return this.songsService.create(createSongDTO)
     }
 
     @Get()
-    findAll() {
-        return this.songService.findAll();
+    findAll() :Promise<Song[]>{
+      return this.songsService.findAll();
     }
 
     //impliment pipes..
@@ -27,8 +23,8 @@ export class SongsController {
     findOne(
         @Param('id',new ParseIntPipe({errorHttpStatusCode:HttpStatus.NOT_ACCEPTABLE}))
     id: number
-    ){
-        return "fetch song based on id"
+    ):Promise<Song>{
+        return this.songsService.findOne(id);
     }
 
     @Put(':id')
