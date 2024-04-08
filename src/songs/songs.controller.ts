@@ -1,8 +1,12 @@
-import { Controller ,Get ,Put, Delete,Post, Param, ParseIntPipe, HttpStatus} from '@nestjs/common';
+import { Controller ,Get ,Put, Delete,Post, Param, ParseIntPipe, HttpStatus, Query, DefaultValuePipe} from '@nestjs/common';
 import { SongsService } from './songs.service';
 import { Body } from '@nestjs/common';
 import { createSongDTO } from './create-song-dto'
+import { updateSongDTO } from './update-song-dto';
 import { Song } from './song-entity';
+import { DeleteResult, UpdateResult } from 'typeorm';
+import { Pagination } from 'nestjs-typeorm-paginate';
+import { query } from 'express';
 
 @Controller('songs')
 export class SongsController {
@@ -14,9 +18,18 @@ export class SongsController {
     }
 
     @Get()
-    findAll() :Promise<Song[]>{
-      return this.songsService.findAll();
-    }
+    findAll(
+        @Query('page', new DefaultValuePipe(1),ParseIntPipe)
+        page = 1,
+        @Query('limit',new DefaultValuePipe(10),ParseIntPipe)
+        limit = 10,
+    ) :Promise<Pagination<Song>>{
+       limit = limit > 100  ? 100 : limit;
+       return this.songsService.paginate({
+        page,
+        limit
+       });
+    } 
 
     //impliment pipes..
     @Get(':id')
@@ -28,13 +41,16 @@ export class SongsController {
     }
 
     @Put(':id')
-    Update() : string {
-        return "update song based on there id"
+    Update(
+        @Param('id', ParseIntPipe) id:number,
+         @Body() updateSongDTO:updateSongDTO) : Promise<UpdateResult> {
+        return this.songsService.update(id,updateSongDTO);
     }
    
     @Delete(':id')
-    Delete() : string {
-        return  "Delete song based on there id"
+    delete(
+        @Param('id',new ParseIntPipe) id:number) : Promise<DeleteResult>{
+        return this.songsService.remove(id)
     }
 
 }
