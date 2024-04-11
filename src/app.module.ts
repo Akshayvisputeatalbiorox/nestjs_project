@@ -9,7 +9,10 @@ import { RequestMethod } from '@nestjs/common';
 import { SongsController } from './songs/songs.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { Song } from './songs/song-entity';
+import { Song } from './songs/song.entity';
+import { Artist } from './artists/artist.entity';
+import { User } from './users/user.entity';
+import { Playlist } from './playlist/playlist.entity';
 
 @Module({
   imports: [SongsModule,
@@ -20,7 +23,7 @@ import { Song } from './songs/song-entity';
     port:5432,
     username:'postgres',
     password:'password',
-    entities:[Song],
+    entities:[Song,Artist,User,Playlist],
     synchronize:true
 
   })],

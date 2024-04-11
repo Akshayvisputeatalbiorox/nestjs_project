@@ -3,7 +3,7 @@ import { SongsService } from './songs.service';
 import { Body } from '@nestjs/common';
 import { createSongDTO } from './create-song-dto'
 import { updateSongDTO } from './update-song-dto';
-import { Song } from './song-entity';
+import { Song } from './song.entity';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { query } from 'express';
