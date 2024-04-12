@@ -1,3 +1,4 @@
+import { Exclude } from "class-transformer"
 import { Playlist } from "src/playlist/playlist.entity"
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm"
 
@@ -12,15 +13,19 @@ export class User {
     @Column()
     lastName: string
 
-    @Column()
+    @Column({unique:true})
     email: string
 
     @Column()
     password: string
 
+    @Column()
+    step: number;
+
+
     //user can create many playlist
 
-    @OneToMany(()=> Playlist, (Playlist) => Playlist.user)
+    @OneToMany(() => Playlist, (Playlist) => Playlist.user)
     playList:Playlist[];
 
 }

@@ -12,4 +12,4 @@ import { playListController } from "./playlist.controller";
     controllers:[playListController],
     providers:[PlayListService],
 })
-export class playListModel {}                                           
+export class playListModule {}                                           

@@ -26,7 +26,7 @@ export class PlayListService{
         playList.name = playListDTO.name 
 
         const songs = await this.songsRepo.findByIds(playListDTO.songs);
-        playList.songs = songs      
+        playList.songs = songs;      
         
         const user = await this.userRepo.findOneBy({id:playListDTO.user});
         playList.user = user;

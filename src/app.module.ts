@@ -13,7 +13,9 @@ import { Song } from './songs/song.entity';
 import { Artist } from './artists/artist.entity';
 import { User } from './users/user.entity';
 import { Playlist } from './playlist/playlist.entity';
-import { playListModel } from './playlist/playlist.module';
+import { playListModule } from './playlist/playlist.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/user.module';
 
 @Module({
   imports: [SongsModule,
@@ -28,7 +30,9 @@ import { playListModel } from './playlist/playlist.module';
     synchronize:true
   }),
   SongsModule,
-  playListModel],
+  playListModule,
+  AuthModule,
+  UsersModule],
   controllers: [AppController],
   providers: [AppService],
 })
