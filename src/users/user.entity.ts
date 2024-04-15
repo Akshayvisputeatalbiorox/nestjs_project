@@ -19,9 +19,6 @@ export class User {
     @Column()
     password: string
 
-    @Column()
-    step: number;
-
 
     //user can create many playlist
 
