@@ -16,6 +16,7 @@ import { Playlist } from './playlist/playlist.entity';
 import { playListModule } from './playlist/playlist.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/user.module';
+import { register } from 'module';
 
 @Module({
   imports: [SongsModule,
@@ -32,9 +33,10 @@ import { UsersModule } from './users/user.module';
   SongsModule,
   playListModule,
   AuthModule,
-  UsersModule],
+  UsersModule,
+],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService]
 })
 export class AppModule implements NestModule {
   constructor(dataSorce:DataSource){
