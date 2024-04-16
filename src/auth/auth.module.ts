@@ -7,14 +7,17 @@ import { User } from 'src/users/user.entity'; // Import the User entity
 import { JwtModule } from '@nestjs/jwt';
 import { authConstant } from './auth.constant';
 import { jwtStrategy } from './jwt-strategy';
+import { ArtistsModule } from 'src/artists/artists.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User]), JwtModule.register({secret:authConstant.secret,
 
     signOptions:{
       expiresIn:'1d'
-    }
-  })], // Import and configure TypeOrmModule for the User entity
+    },
+  }),
+  ArtistsModule],
+   // Import and configure TypeOrmModule for the User entity
   providers: [AuthService, UsersService,jwtStrategy],
   controllers: [AuthController],
   exports: [AuthService],

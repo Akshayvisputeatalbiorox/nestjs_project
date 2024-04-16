@@ -40,7 +40,7 @@ export class UsersService {
     //   }
 
     async findOne(data : LoginDTO) : Promise <User> {
-       const user = await this.userRepository.findOneBy({email:data.email})
+       const user = await this.userRepository.findOneBy({ email:data.email })
        if(!user){
         throw new UnauthorizedException('could not find user');
        }
