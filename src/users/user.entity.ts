@@ -19,6 +19,12 @@ export class User {
     @Column()
     password: string
 
+    @Column({nullable:true,type:'text'})
+    twoAFSecret:string;
+
+    @Column({default:false,type:'boolean'})
+    enable2FA:boolean
+
 
     //user can create many playlist
 

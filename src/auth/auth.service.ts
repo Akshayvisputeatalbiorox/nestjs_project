@@ -6,8 +6,10 @@ import * as bcrypt from 'bcryptjs'
 import { error } from 'console';
 import { JwtService } from '@nestjs/jwt';
 import { ArtistsService } from 'src/artists/artists.service';
-import { payloadType } from './types';
+import { Enable2FAType, payloadType } from './types';
 
+import * as speakeasy from 'speakeasy'
+import { authenticate, use } from 'passport';
 @Injectable()
 export class AuthService {
     constructor(private userService:UsersService,
@@ -16,14 +18,13 @@ export class AuthService {
 
     ){}
 
-    async login( loginDTO: LoginDTO ): Promise< {accessToken:string} > {
+    async login( loginDTO: LoginDTO ): Promise< {accessToken:string} | {validate2FA: string , message: string} > {
         const user = await this.userService.findOne(loginDTO);
 
         const passwordMatch = await bcrypt.compare(
             loginDTO.password,
             user.password,
         );
-
 
         if(passwordMatch){
             delete user.password
@@ -33,6 +34,13 @@ export class AuthService {
             payload.artistId = artist.id
            }
 
+          if(user.enable2FA && user.twoAFSecret){
+            return{
+                validate2FA :"http://localhost:3000/auth/validate-2fa",
+                message:"please send one time time,e passswrd from your google authenticate app"
+            }
+          }
+
            return {
             accessToken: this.jwtService.sign(payload),
            }
@@ -41,4 +49,39 @@ export class AuthService {
             throw new UnauthorizedException('password does not match');
         }
     }
+
+    async enable2FA(userId:number) : Promise<Enable2FAType> {
+       const user = await this.userService.findById(userId)
+       if(user.enable2FA){
+        return {secret:user.twoAFSecret}
+       }
+       const secret = speakeasy.generateSecret();
+       console.log(secret);
+       user.twoAFSecret = secret.base32 ;
+       await this.userService.updateSecrateKey( user.id,user.twoAFSecret )
+       return {secret:user.twoAFSecret}
+    }
+
+    async validate2FAToken(
+        userId:number,
+        token:string,
+    ): Promise<{Verify:boolean}>{
+     try {
+        const user = await this.userService.findById(userId)
+        console.log(token)
+        const verified = speakeasy.totp.verify({
+            secret:user.twoAFSecret,
+            token:token,
+            encoding:'base32'
+        });
+        if(verified){
+            return {Verify:true}
+        }else{
+            return {Verify:false}
+        }
+     } catch (error) {
+        throw new UnauthorizedException('error verified tken')
+     }
+    } 
 }
+

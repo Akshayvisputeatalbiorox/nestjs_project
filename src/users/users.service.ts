@@ -47,4 +47,18 @@ export class UsersService {
        return user;
     }
 
+    async findById(id:number):Promise<User>{
+        return  this.userRepository.findOneBy({id:id})
+    }
+
+    async updateSecrateKey(userId,secret:string){
+         return this.userRepository.update(
+            {id:userId},
+            {
+                twoAFSecret:secret,
+                enable2FA:true
+            }
+         )
+    }
+
 }
