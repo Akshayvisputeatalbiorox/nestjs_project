@@ -34,12 +34,12 @@ export class AuthService {
             payload.artistId = artist.id
            }
 
-          if(user.enable2FA && user.twoAFSecret){
-            return{
-                validate2FA :"http://localhost:3000/auth/validate-2fa",
-                message:"please send one time time,e passswrd from your google authenticate app"
-            }
-          }
+        //   if(user.enable2FA && user.twoAFSecret){
+        //     return{
+        //         validate2FA :"http://localhost:3000/auth/validate-2fa",
+        //         message:"please send one time time,e passswrd from your google authenticate app"
+        //     }
+        //   }
 
            return {
             accessToken: this.jwtService.sign(payload),
